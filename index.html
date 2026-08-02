@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sally Lee — Product Designer</title>
+<meta name="description" content="Sally Lee의 프로덕트 디자인 포트폴리오. UX/UI 디자인, 디자인 시스템, 프로덕트 전략 작업을 소개합니다.">
+<style>
+  :root{
+    --bg: #faf8f4;
+    --bg-alt: #f1ede4;
+    --ink: #17140f;
+    --ink-soft: #55503f;
+    --muted: #8a8371;
+    --line: rgba(23,20,15,0.12);
+    --accent: #ff5b26;
+    --accent-ink: #17140f;
+    --card: #ffffff;
+    --radius: 18px;
+    --maxw: 1180px;
+    --shadow: 0 20px 60px rgba(23,20,15,0.08);
+    color-scheme: light;
+  }
+  :root[data-theme="dark"]{
+    --bg: #121110;
+    --bg-alt: #1a1815;
+    --ink: #f6f3ec;
+    --ink-soft: #cbc4b3;
+    --muted: #928c7a;
+    --line: rgba(246,243,236,0.12);
+    --accent: #ff7a45;
+    --accent-ink: #121110;
+    --card: #1c1a16;
+    --shadow: 0 20px 60px rgba(0,0,0,0.4);
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #121110;
+      --bg-alt: #1a1815;
+      --ink: #f6f3ec;
+      --ink-soft: #cbc4b3;
+      --muted: #928c7a;
+      --line: rgba(246,243,236,0.12);
+      --accent: #ff7a45;
+      --accent-ink: #121110;
+      --card: #1c1a16;
+      --shadow: 0 20px 60px rgba(0,0,0,0.4);
+      color-scheme: dark;
+    }
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: "Pretendard", "Apple SD Gothic Neo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing:antialiased;
+    transition: background .4s ease, color .4s ease;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  ::selection{ background: var(--accent); color:#fff; }
+
+  .wrap{
+    max-width: var(--maxw);
+    margin:0 auto;
+    padding: 0 32px;
+  }
+  @media (max-width:640px){ .wrap{padding:0 20px;} }
+
+  /* Header */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    backdrop-filter: blur(10px);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease, background .4s ease;
+  }
+  header.scrolled{ border-bottom-color: var(--line); }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 0;
+  }
+  .logo{
+    font-weight:800; font-size:1.05rem; letter-spacing:-0.02em;
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo .dot{ width:8px; height:8px; border-radius:50%; background:var(--accent); display:inline-block; }
+  nav.links{ display:flex; gap:28px; align-items:center; }
+  nav.links a{
+    font-size:0.92rem; color:var(--ink-soft); font-weight:500;
+    position:relative; padding:4px 0;
+  }
+  nav.links a::after{
+    content:""; position:absolute; left:0; right:0; bottom:-2px; height:1.5px;
+    background:var(--accent); transform:scaleX(0); transform-origin:right;
+    transition:transform .25s ease;
+  }
+  nav.links a:hover{ color:var(--ink); }
+  nav.links a:hover::after{ transform:scaleX(1); transform-origin:left; }
+
+  .icon-btn{
+    width:38px; height:38px; border-radius:50%;
+    border:1px solid var(--line); background:var(--card);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition: transform .2s ease, background .2s ease;
+    font-size:1rem;
+  }
+  .icon-btn:hover{ transform: translateY(-2px); }
+
+  .menu-toggle{ display:none; }
+  @media (max-width: 840px){
+    nav.links{
+      position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px);
+      background:var(--bg-alt); flex-direction:column; justify-content:center;
+      gap:32px; padding:40px; transform:translateX(100%);
+      transition: transform .35s ease; box-shadow: -10px 0 40px rgba(0,0,0,0.15);
+    }
+    nav.links.open{ transform:translateX(0); }
+    nav.links a{ font-size:1.3rem; }
+    .menu-toggle{
+      display:flex; width:38px; height:38px; border-radius:50%;
+      border:1px solid var(--line); background:var(--card);
+      align-items:center; justify-content:center; cursor:pointer;
+    }
+    .header-actions{ display:flex; gap:10px; align-items:center; }
+  }
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:90;
+    opacity:0; pointer-events:none; transition:opacity .3s ease;
+  }
+  .overlay.show{ opacity:1; pointer-events:auto; }
+
+  /* Reveal */
+  .reveal{ opacity:0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in{ opacity:1; transform:none; }
+  .reveal-delay-1{ transition-delay:.08s; }
+  .reveal-delay-2{ transition-delay:.16s; }
+  .reveal-delay-3{ transition-delay:.24s; }
+
+  /* Hero */
+  .hero{
+    padding: 168px 0 100px;
+    position:relative;
+  }
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.82rem; font-weight:600; letter-spacing:0.04em;
+    color: var(--ink-soft); background:var(--bg-alt);
+    border:1px solid var(--line); padding:7px 14px; border-radius:999px;
+    margin-bottom:28px;
+  }
+  .hero-eyebrow .pulse{
+    width:7px; height:7px; border-radius:50%; background:#3fb950;
+    box-shadow:0 0 0 0 rgba(63,185,80,0.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(63,185,80,0.5);}
+    70%{ box-shadow:0 0 0 8px rgba(63,185,80,0);}
+    100%{ box-shadow:0 0 0 0 rgba(63,185,80,0);}
+  }
+  h1.hero-title{
+    font-size: clamp(2.4rem, 6.4vw, 5rem);
+    line-height:1.05; letter-spacing:-0.03em; font-weight:800;
+    margin:0 0 28px; max-width:960px;
+  }
+  h1.hero-title em{
+    font-style:normal; color:var(--accent); position:relative;
+  }
+  .hero-sub{
+    font-size: clamp(1.05rem, 1.6vw, 1.28rem);
+    color:var(--ink-soft); max-width:640px; line-height:1.65; margin:0 0 40px;
+    font-weight:400;
+  }
+  .hero-cta{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:64px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 15px 26px; border-radius:999px; font-weight:600; font-size:0.95rem;
+    cursor:pointer; border:1px solid transparent; transition: all .25s ease;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 12px 24px rgba(255,91,38,0.3); }
+  .btn-ghost{ background:transparent; border-color:var(--line); color:var(--ink); }
+  .btn-ghost:hover{ background:var(--bg-alt); transform:translateY(-3px); }
+
+  .hero-stats{
+    display:grid; grid-template-columns:repeat(4,auto); gap:48px;
+    padding-top:40px; border-top:1px solid var(--line);
+  }
+  @media (max-width:760px){
+    .hero-stats{ grid-template-columns:repeat(2,1fr); gap:28px 20px; }
+  }
+  .stat-num{ font-size:1.9rem; font-weight:800; letter-spacing:-0.02em; }
+  .stat-num span{ color:var(--accent); }
+  .stat-label{ font-size:0.85rem; color:var(--muted); margin-top:4px; }
+
+  /* Section shared */
+  section{ padding: 110px 0; }
+  @media (max-width:760px){ section{ padding:80px 0; } }
+  .section-head{ max-width:640px; margin-bottom:56px; }
+  .kicker{
+    font-size:0.82rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:14px; display:block;
+  }
+  h2.section-title{
+    font-size: clamp(1.9rem, 3.4vw, 2.6rem); font-weight:800; letter-spacing:-0.02em;
+    margin:0 0 16px; line-height:1.15;
+  }
+  .section-desc{ color:var(--ink-soft); font-size:1.05rem; line-height:1.7; }
+
+  /* About */
+  .about-grid{
+    display:grid; grid-template-columns: 1.1fr 0.9fr; gap:64px; align-items:start;
+  }
+  @media (max-width:860px){ .about-grid{ grid-template-columns:1fr; gap:40px; } }
+  .about-photo{
+    aspect-ratio: 4/5; border-radius: var(--radius); overflow:hidden;
+    background: linear-gradient(155deg, #ffd7c2, #ff5b26 60%, #7a2e0f);
+    position:relative; box-shadow:var(--shadow);
+  }
+  :root[data-theme="dark"] .about-photo{ background: linear-gradient(155deg, #6b3a24, #ff7a45 55%, #2a1005); }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .about-photo{ background: linear-gradient(155deg, #6b3a24, #ff7a45 55%, #2a1005); } }
+  .about-photo::before{
+    content:"SL"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:6rem; font-weight:800; color:rgba(255,255,255,0.25); letter-spacing:-0.05em;
+  }
+  .about-text p{ color:var(--ink-soft); line-height:1.8; font-size:1.05rem; margin:0 0 20px; }
+  .about-text strong{ color:var(--ink); font-weight:700; }
+  .tool-list{ display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+  .tool-chip{
+    padding:9px 16px; border-radius:999px; background:var(--bg-alt); border:1px solid var(--line);
+    font-size:0.86rem; font-weight:600; color:var(--ink-soft);
+  }
+
+  /* Work */
+  .work-list{ display:flex; flex-direction:column; gap:24px; }
+  .work-card{
+    display:grid; grid-template-columns: 1.1fr 1.3fr; gap:0;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; box-shadow:var(--shadow);
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+  }
+  .work-card:hover{ transform:translateY(-6px); }
+  @media (max-width:800px){ .work-card{ grid-template-columns:1fr; } }
+  .work-visual{
+    position:relative; min-height:280px; display:flex; align-items:center; justify-content:center;
+    padding:40px; overflow:hidden;
+  }
+  .work-visual .glyph{
+    font-size:5rem; font-weight:800; letter-spacing:-0.04em; color:rgba(255,255,255,0.9);
+    position:relative; z-index:2;
+  }
+  .work-visual::after{
+    content:""; position:absolute; width:220px; height:220px; border-radius:50%;
+    background:rgba(255,255,255,0.14); filter:blur(10px);
+    top:-60px; right:-60px;
+  }
+  .work-visual.v1{ background:linear-gradient(135deg,#ff5b26,#ffb37a); }
+  .work-visual.v2{ background:linear-gradient(135deg,#1b1a17,#4a4740); }
+  .work-visual.v3{ background:linear-gradient(135deg,#2e6f5e,#8fd9c4); }
+  .work-visual.v4{ background:linear-gradient(135deg,#3455a8,#8fb0ff); }
+
+  .work-body{ padding:40px; display:flex; flex-direction:column; }
+  .work-meta{ display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+  .work-tag{
+    font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--muted); background:var(--bg-alt); border:1px solid var(--line);
+    padding:5px 11px; border-radius:999px;
+  }
+  .work-title{ font-size:1.5rem; font-weight:800; letter-spacing:-0.01em; margin:0 0 12px; }
+  .work-desc{ color:var(--ink-soft); line-height:1.7; margin:0 0 20px; flex:1; }
+  .work-results{ display:flex; gap:28px; margin-bottom:22px; flex-wrap:wrap; }
+  .work-results .r-num{ font-weight:800; font-size:1.2rem; color:var(--accent); }
+  .work-results .r-label{ font-size:0.78rem; color:var(--muted); }
+  .work-link{
+    display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:0.95rem;
+    color:var(--ink); align-self:flex-start;
+  }
+  .work-link .arrow{ transition:transform .25s ease; }
+  .work-card:hover .work-link .arrow{ transform:translateX(4px); }
+
+  /* Process */
+  .process-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+  }
+  @media (max-width:900px){ .process-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .process-grid{ grid-template-columns:1fr; } }
+  .process-card{
+    background:var(--bg-alt); border:1px solid var(--line); border-radius:16px; padding:30px 26px;
+    transition: transform .3s ease, border-color .3s ease;
+  }
+  .process-card:hover{ transform:translateY(-5px); border-color:var(--accent); }
+  .process-num{
+    font-size:0.85rem; font-weight:800; color:var(--accent); margin-bottom:16px;
+    display:inline-block; padding:4px 10px; border:1px solid var(--accent); border-radius:8px;
+  }
+  .process-title{ font-size:1.15rem; font-weight:800; margin:0 0 10px; }
+  .process-desc{ color:var(--ink-soft); font-size:0.94rem; line-height:1.65; }
+
+  /* Testimonials */
+  .testi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media (max-width:900px){ .testi-grid{ grid-template-columns:1fr; } }
+  .testi-card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px; padding:32px;
+    box-shadow:var(--shadow);
+  }
+  .testi-quote{ font-size:1.02rem; line-height:1.75; color:var(--ink); margin-bottom:24px; }
+  .testi-quote::before{ content:"“"; color:var(--accent); font-size:1.6rem; font-weight:800; }
+  .testi-person{ display:flex; align-items:center; gap:12px; }
+  .testi-avatar{
+    width:42px; height:42px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; font-size:0.9rem;
+  }
+  .testi-name{ font-weight:700; font-size:0.92rem; }
+  .testi-role{ font-size:0.82rem; color:var(--muted); }
+
+  /* Contact */
+  .contact-box{
+    background: linear-gradient(135deg, var(--ink) 0%, #2b241c 100%);
+    border-radius: 28px; padding: 72px 56px; text-align:center; color:#fdfcf9;
+    position:relative; overflow:hidden;
+  }
+  :root[data-theme="dark"] .contact-box{ background: linear-gradient(135deg, #262019, #171310); }
+  @media (max-width:640px){ .contact-box{ padding:52px 26px; } }
+  .contact-box::before{
+    content:""; position:absolute; width:340px; height:340px; border-radius:50%;
+    background: radial-gradient(circle, rgba(255,91,38,0.5), transparent 70%);
+    top:-120px; left:-80px; filter:blur(20px);
+  }
+  .contact-box h2{
+    font-size:clamp(1.9rem,4vw,3rem); font-weight:800; margin:0 0 18px; letter-spacing:-0.02em;
+    position:relative; z-index:1;
+  }
+  .contact-box p{ color:rgba(255,255,255,0.68); max-width:520px; margin:0 auto 36px; line-height:1.7; position:relative; z-index:1; }
+  .contact-actions{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; }
+  .contact-box .btn-primary{ background:var(--accent); }
+  .contact-box .btn-ghost{ border-color:rgba(255,255,255,0.25); color:#fff; }
+  .contact-box .btn-ghost:hover{ background:rgba(255,255,255,0.1); }
+
+  .contact-links{
+    display:flex; gap:26px; justify-content:center; margin-top:40px; flex-wrap:wrap;
+    position:relative; z-index:1;
+  }
+  .contact-links a{ color:rgba(255,255,255,0.7); font-size:0.9rem; font-weight:600; }
+  .contact-links a:hover{ color:#fff; }
+
+  footer{
+    padding:40px 0 60px; text-align:center; color:var(--muted); font-size:0.85rem;
+  }
+
+  /* Toast for copy email */
+  .toast{
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--ink); color:var(--bg); padding:14px 22px; border-radius:12px;
+    font-size:0.9rem; font-weight:600; opacity:0; pointer-events:none;
+    transition: all .3s ease; z-index:200; box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* Back to top */
+  .to-top{
+    position:fixed; right:24px; bottom:24px; width:46px; height:46px; border-radius:50%;
+    background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; opacity:0; pointer-events:none; transform:translateY(10px);
+    transition: all .3s ease; z-index:80; box-shadow:0 10px 24px rgba(255,91,38,0.35);
+    font-size:1.1rem; border:none;
+  }
+  .to-top.show{ opacity:1; pointer-events:auto; transform:none; }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<header id="siteHeader">
+  <div class="wrap nav">
+    <a href="#top" class="logo"><span class="dot"></span> Sally Lee</a>
+    <nav class="links" id="navLinks">
+      <a href="#about" data-nav>소개</a>
+      <a href="#work" data-nav>프로젝트</a>
+      <a href="#process" data-nav>작업 방식</a>
+      <a href="#testimonials" data-nav>후기</a>
+      <a href="#contact" data-nav>연락하기</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" title="테마 전환" aria-label="테마 전환">🌙</button>
+      <button class="menu-toggle" id="menuToggle" aria-label="메뉴 열기">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero wrap">
+    <div class="hero-eyebrow reveal in"><span class="pulse"></span> 새 프로젝트 협업 가능 · 2026년 상반기</div>
+    <h1 class="hero-title reveal in">
+      사용자의 여정을 <em>설득력 있는 화면</em>으로 바꾸는<br> 프로덕트 디자이너, Sally Lee입니다.
+    </h1>
+    <p class="hero-sub reveal in reveal-delay-1">
+      리서치부터 디자인 시스템, 프로토타이핑, 데이터 기반 검증까지 — 스타트업부터 스케일업까지 8년간 0에서 1을 만들고 다듬어 왔습니다.
+    </p>
+    <div class="hero-cta reveal in reveal-delay-2">
+      <a href="#work" class="btn btn-primary">프로젝트 보기 →</a>
+      <a href="#contact" class="btn btn-ghost">이메일로 연락하기</a>
+    </div>
+    <div class="hero-stats reveal in reveal-delay-3">
+      <div>
+        <div class="stat-num">8<span>년</span></div>
+        <div class="stat-label">프로덕트 디자인 경력</div>
+      </div>
+      <div>
+        <div class="stat-num">32<span>+</span></div>
+        <div class="stat-label">런칭한 프로젝트</div>
+      </div>
+      <div>
+        <div class="stat-num">4<span>개</span></div>
+        <div class="stat-label">디자인 시스템 구축</div>
+      </div>
+      <div>
+        <div class="stat-num">98<span>%</span></div>
+        <div class="stat-label">고객 재의뢰율</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="wrap">
+    <div class="about-grid">
+      <div class="about-photo reveal"></div>
+      <div class="about-text">
+        <span class="kicker reveal">ABOUT ME</span>
+        <h2 class="section-title reveal">감성과 데이터 사이에서 균형을 잡는 디자이너</h2>
+        <p class="reveal">
+          안녕하세요, 저는 <strong>제품 전체의 경험을 설계</strong>하는 프로덕트 디자이너 Sally입니다. 핀테크, 커머스, B2B SaaS 등 다양한 도메인에서 리서치·UX·UI·디자인 시스템을 아우르며 일해왔어요.
+        </p>
+        <p class="reveal reveal-delay-1">
+          단순히 예쁜 화면을 만드는 것이 아니라, <strong>비즈니스 목표와 사용자 니즈를 함께 충족</strong>시키는 결정을 내리는 것을 가장 중요하게 생각합니다. 매 프로젝트마다 가설 → 검증 → 반복의 사이클을 통해 확신 있는 결과물을 만듭니다.
+        </p>
+        <p class="reveal reveal-delay-2">
+          업무 외에는 타이포그래피 수집과 필름 사진, 그리고 동네 러닝 크루 활동을 즐깁니다.
+        </p>
+        <div class="tool-list reveal reveal-delay-2">
+          <span class="tool-chip">Figma</span>
+          <span class="tool-chip">Framer</span>
+          <span class="tool-chip">Notion</span>
+          <span class="tool-chip">Maze</span>
+          <span class="tool-chip">Webflow</span>
+          <span class="tool-chip">Principle</span>
+          <span class="tool-chip">After Effects</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work" class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">SELECTED WORK</span>
+      <h2 class="section-title">최근 진행한 주요 프로젝트</h2>
+      <p class="section-desc">리서치부터 런칭까지, 각 프로젝트의 문제 정의와 성과를 소개합니다.</p>
+    </div>
+
+    <div class="work-list">
+      <article class="work-card reveal">
+        <div class="work-visual v1"><span class="glyph">FN</span></div>
+        <div class="work-body">
+          <div class="work-meta">
+            <span class="work-tag">핀테크</span>
+            <span class="work-tag">모바일 앱</span>
+            <span class="work-tag">디자인 시스템</span>
+          </div>
+          <h3 class="work-title">Finoa — 개인 자산관리 앱 리디자인</h3>
+          <p class="work-desc">복잡한 자산 데이터를 한눈에 파악할 수 있도록 정보 구조를 재설계하고, 40개 이상의 화면에 적용 가능한 디자인 시스템을 구축했습니다.</p>
+          <div class="work-results">
+            <div><div class="r-num">+42%</div><div class="r-label">주간 활성 사용자</div></div>
+            <div><div class="r-num">-31%</div><div class="r-label">온보딩 이탈률</div></div>
+            <div><div class="r-num">4.8★</div><div class="r-label">스토어 평점</div></div>
+          </div>
+          <a href="#contact" class="work-link">케이스 스터디 요청하기 <span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual v2"><span class="glyph">B2B</span></div>
+        <div class="work-body">
+          <div class="work-meta">
+            <span class="work-tag">SaaS</span>
+            <span class="work-tag">웹 대시보드</span>
+            <span class="work-tag">0 → 1</span>
+          </div>
+          <h3 class="work-title">Ledgerly — 회계 자동화 SaaS 0→1 디자인</h3>
+          <p class="work-desc">복잡한 회계 워크플로우를 단순한 태스크 흐름으로 재구성. 리서치 15건, 유저 테스트 6라운드를 거쳐 초기 버전을 출시했습니다.</p>
+          <div class="work-results">
+            <div><div class="r-num">120+</div><div class="r-label">베타 유저 확보</div></div>
+            <div><div class="r-num">-58%</div><div class="r-label">태스크 완료 시간</div></div>
+            <div><div class="r-num">3주</div><div class="r-label">디자인→개발 인계</div></div>
+          </div>
+          <a href="#contact" class="work-link">케이스 스터디 요청하기 <span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual v3"><span class="glyph">GR</span></div>
+        <div class="work-body">
+          <div class="work-meta">
+            <span class="work-tag">커머스</span>
+            <span class="work-tag">전환율 최적화</span>
+          </div>
+          <h3 class="work-title">Groveline — 신선식품 커머스 결제 퍼널 개선</h3>
+          <p class="work-desc">퍼널 이탈 지점을 데이터로 분석하고, A/B 테스트 기반으로 체크아웃 플로우를 3단계에서 1단계로 축소했습니다.</p>
+          <div class="work-results">
+            <div><div class="r-num">+27%</div><div class="r-label">결제 전환율</div></div>
+            <div><div class="r-num">-44%</div><div class="r-label">장바구니 이탈</div></div>
+            <div><div class="r-num">A/B</div><div class="r-label">테스트 9회 진행</div></div>
+          </div>
+          <a href="#contact" class="work-link">케이스 스터디 요청하기 <span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual v4"><span class="glyph">DS</span></div>
+        <div class="work-body">
+          <div class="work-meta">
+            <span class="work-tag">디자인 시스템</span>
+            <span class="work-tag">협업 툴</span>
+          </div>
+          <h3 class="work-title">Northwind Design System — 사내 통합 디자인 시스템</h3>
+          <p class="work-desc">6개 프로덕트 팀이 공유하는 토큰 기반 디자인 시스템을 설계, 컴포넌트 200개 이상을 문서화하여 팀 간 협업 속도를 높였습니다.</p>
+          <div class="work-results">
+            <div><div class="r-num">6개</div><div class="r-label">팀에서 채택</div></div>
+            <div><div class="r-num">-65%</div><div class="r-label">디자인 QA 시간</div></div>
+            <div><div class="r-num">200+</div><div class="r-label">문서화된 컴포넌트</div></div>
+          </div>
+          <a href="#contact" class="work-link">케이스 스터디 요청하기 <span class="arrow">→</span></a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">HOW I WORK</span>
+      <h2 class="section-title">일하는 방식</h2>
+      <p class="section-desc">모든 프로젝트는 아래 네 단계를 기본으로 하되, 팀의 상황에 맞게 유연하게 조정합니다.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-card reveal">
+        <span class="process-num">01</span>
+        <h3 class="process-title">발견 &amp; 리서치</h3>
+        <p class="process-desc">이해관계자 인터뷰, 사용자 조사, 경쟁 분석을 통해 진짜 문제를 정의합니다.</p>
+      </div>
+      <div class="process-card reveal reveal-delay-1">
+        <span class="process-num">02</span>
+        <h3 class="process-title">구조 설계</h3>
+        <p class="process-desc">정보 구조와 플로우를 정리하고, 저해상도 와이어프레임으로 빠르게 검증합니다.</p>
+      </div>
+      <div class="process-card reveal reveal-delay-2">
+        <span class="process-num">03</span>
+        <h3 class="process-title">비주얼 디자인</h3>
+        <p class="process-desc">브랜드 언어를 반영한 고해상도 화면과 인터랙션, 마이크로 카피를 완성합니다.</p>
+      </div>
+      <div class="process-card reveal reveal-delay-3">
+        <span class="process-num">04</span>
+        <h3 class="process-title">검증 &amp; 인계</h3>
+        <p class="process-desc">사용자 테스트로 검증하고, 개발팀에 정확한 스펙과 자산을 전달합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">TESTIMONIALS</span>
+      <h2 class="section-title">함께 일한 분들의 이야기</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <p class="testi-quote">Sally는 비즈니스 지표와 사용자 경험을 동시에 고려하는 몇 안 되는 디자이너입니다. 덕분에 저희 팀 결정 속도가 눈에 띄게 빨라졌어요.</p>
+        <div class="testi-person">
+          <div class="testi-avatar" style="background:#ff5b26;">JK</div>
+          <div>
+            <div class="testi-name">James Kwon</div>
+            <div class="testi-role">CEO, Finoa</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <p class="testi-quote">복잡한 회계 도메인을 이렇게 직관적으로 풀어낼 줄은 몰랐습니다. 개발 인계 문서도 군더더기 없이 명확했어요.</p>
+        <div class="testi-person">
+          <div class="testi-avatar" style="background:#2e6f5e;">MH</div>
+          <div>
+            <div class="testi-name">Minji Han</div>
+            <div class="testi-role">PM, Ledgerly</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <p class="testi-quote">데이터 기반의 논리적인 제안과 감각적인 비주얼을 동시에 갖춘 디자이너. 다음 프로젝트에도 꼭 함께하고 싶습니다.</p>
+        <div class="testi-person">
+          <div class="testi-avatar" style="background:#3455a8;">TL</div>
+          <div>
+            <div class="testi-name">Tom Lin</div>
+            <div class="testi-role">Head of Product, Northwind</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="wrap">
+    <div class="contact-box reveal">
+      <h2>새로운 프로젝트를 함께 만들어봐요</h2>
+      <p>현재 프리랜스 및 파트타임 협업을 받고 있습니다. 프로덕트 초기 단계부터 리디자인까지, 편하게 이야기 나눠요.</p>
+      <div class="contact-actions">
+        <button class="btn btn-primary" id="copyEmailBtn">sally@culturehero.net 복사하기</button>
+        <a href="#top" class="btn btn-ghost">맨 위로</a>
+      </div>
+      <div class="contact-links">
+        <a href="#" onclick="return false;">LinkedIn</a>
+        <a href="#" onclick="return false;">Instagram</a>
+        <a href="#" onclick="return false;">Behance</a>
+        <a href="#" onclick="return false;">Notion 이력서</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  © 2026 Sally Lee. All rights reserved. Made with care in Seoul.
+</footer>
+
+<button class="to-top" id="toTop" aria-label="맨 위로 이동">↑</button>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- Theme toggle ----
+  var themeToggle = document.getElementById('themeToggle');
+  var root = document.documentElement;
+  function prefersDark(){ return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+  function applyThemeIcon(){
+    var isDark = root.getAttribute('data-theme') === 'dark' || (!root.getAttribute('data-theme') && prefersDark());
+    themeToggle.textContent = isDark ? '☀️' : '🌙';
+  }
+  var savedTheme = localStorage.getItem('sl-theme');
+  if(savedTheme){ root.setAttribute('data-theme', savedTheme); }
+  applyThemeIcon();
+  themeToggle.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') || (prefersDark() ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('sl-theme', next);
+    applyThemeIcon();
+  });
+
+  // ---- Mobile menu ----
+  var menuToggle = document.getElementById('menuToggle');
+  var navLinks = document.getElementById('navLinks');
+  var overlay = document.getElementById('overlay');
+  function closeMenu(){
+    navLinks.classList.remove('open');
+    overlay.classList.remove('show');
+    menuToggle.textContent = '☰';
+  }
+  function toggleMenu(){
+    var isOpen = navLinks.classList.toggle('open');
+    overlay.classList.toggle('show', isOpen);
+    menuToggle.textContent = isOpen ? '✕' : '☰';
+  }
+  menuToggle.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', closeMenu);
+  document.querySelectorAll('[data-nav]').forEach(function(a){
+    a.addEventListener('click', closeMenu);
+  });
+
+  // ---- Header scroll state ----
+  var header = document.getElementById('siteHeader');
+  var toTopBtn = document.getElementById('toTop');
+  function onScroll(){
+    var y = window.scrollY || document.documentElement.scrollTop;
+    header.classList.toggle('scrolled', y > 12);
+    toTopBtn.classList.toggle('show', y > 600);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  toTopBtn.addEventListener('click', function(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ---- Scroll reveal ----
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // ---- Copy email ----
+  var copyBtn = document.getElementById('copyEmailBtn');
+  var toast = document.getElementById('toast');
+  var email = 'sally@culturehero.net';
+  var toastTimer;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+  }
+  copyBtn.addEventListener('click', function(){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(email).then(function(){
+        showToast('이메일 주소가 복사되었습니다 ✓');
+      }).catch(function(){
+        showToast(email);
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = email;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showToast('이메일 주소가 복사되었습니다 ✓'); }
+      catch(e){ showToast(email); }
+      document.body.removeChild(ta);
+    }
+  });
+
+  // ---- Smooth anchor scroll offset for fixed header ----
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if(!target) return;
+      e.preventDefault();
+      var top = target.getBoundingClientRect().top + window.scrollY - 76;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+      history.pushState(null, '', '#' + id);
+    });
+  });
+})();
+</script>
+</body>
+</html>
